@@ -5,14 +5,14 @@ const Searchbar = ({onSubmit}) => {
     
     return (
         <header className={styles.searchbar}>
-            <form className={styles.searchForm}>
+            <form className={styles.searchForm} onSubmit={onSubmit}>
                 <button type="submit" className={styles.searchFormBtn}>
                 <span className={styles.searchFormBtnLabel}>Search</span>
                 </button>
 
                 <input
-                onSubmit={onSubmit}
                 className={styles.searchFormInput}
+                name="input"
                 type="text"
                 autoComplete="off"
                 autoFocus
