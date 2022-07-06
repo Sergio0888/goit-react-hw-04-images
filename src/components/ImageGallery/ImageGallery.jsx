@@ -1,5 +1,6 @@
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
-import styles from './imagegallery.module.css'
+import styles from './imagegallery.module.css';
+import PropTypes from 'prop-types';
 
 const ImageGallery = ({items , onClick}) => {
   return(
@@ -8,5 +9,15 @@ const ImageGallery = ({items , onClick}) => {
  </ul>
  )
 };
+
+ImageGallery.propTypes = {
+  items: PropTypes.arrayOf(
+      PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      webformatURL: PropTypes.string.isRequired,
+      tags: PropTypes.string, 
+  })), 
+  onClick: PropTypes.func.isRequired,
+}
 
 export default ImageGallery;

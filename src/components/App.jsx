@@ -109,12 +109,9 @@ class App extends Component {
             <img src={modal.largeImageURL} alt={modal.tags} width="900"/>
           </Modal>
         }
-
         <Searchbar onSubmit={handleSubmit}/>
         <ImageGallery items={items} onClick={fetchId}/>
         {loading && <Loader />}
-      
-
         {!loading && items.length >= 12 && page * 12 <= totalHits && (
           <Button load={loadMore} />
         )}
