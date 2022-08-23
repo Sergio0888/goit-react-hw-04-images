@@ -2,20 +2,11 @@ import PropTypes from 'prop-types';
 import styles  from './imagegalleryitem.module.css';
 
 
-const ImageGalleryItem = ({items , onClick}) => {
-    const element = items.map(({id, webformatURL, tags}) => {
-       return( 
-       <li className={styles.imageGalleryItem} key={id} onClick={()=>onClick(id)}>
-        <img
-        className={styles.imageGalleryItemImage} 
-        src={webformatURL} 
-        alt={tags} />
-        </li>)
-    })
+const ImageGalleryItem = ({ id , onClick, src, alt }) => {
     return (
-        <>
-        {element}
-        </>     
+        <li className={styles.imageGalleryItem} key={id} onClick={()=>onClick(id)}>
+            <img className={styles.image} src={src} alt={alt} />
+        </li>
     )
 }
 

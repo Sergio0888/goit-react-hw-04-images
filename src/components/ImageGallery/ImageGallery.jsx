@@ -1,14 +1,22 @@
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 import styles from './imagegallery.module.css';
 import PropTypes from 'prop-types';
+import { nanoid } from 'nanoid';
 
 const ImageGallery = ({items , onClick}) => {
-    
-  return(
-      <ul className={styles.imageGallery}>
-        <ImageGalleryItem items={items} onClick={onClick} />
-    </ul>
-    )
+
+  const elements = items.map(({id, webformatURL, tags}) => {
+    return (
+    <ImageGalleryItem  
+    onClick={onClick}
+    key={nanoid()}
+    id={id}
+    src={webformatURL}
+    alt={tags} />
+    ) 
+  })
+
+    return <ul className={styles.imageGallery}>{elements}</ul>
 };
 
 ImageGallery.propTypes = {

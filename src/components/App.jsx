@@ -1,10 +1,10 @@
 import { Component } from "react";
-import Button from "shared/components/Button/Button";
-import { getImages } from '../shared/api/images';
+import { getImages } from '../api/images';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
-import Loader from '../shared/components/Loader/Loader';
-import Modal from '../shared/components/Modal/Modal';
+import Button from "./Button/Button";
+import Loader from './Loader/Loader';
+import Modal from './Modal/Modal';
 import initialState from "./initialState";
 
 
