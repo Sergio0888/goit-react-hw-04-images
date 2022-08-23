@@ -1,14 +1,14 @@
 import styles from './button.module.css';
 import PropTypes from 'prop-types';
 
-const Button = ({load}) => {
+const Button = ({loadMore, text}) => {
 
     return (
     <div className={styles.box}>
         <button 
-        onClick={load}
+        onClick={loadMore}
         className={styles.button}
-        >Load More</button>
+        >{text}</button>
     </div>
     )
 };

@@ -1,5 +1,5 @@
-import styles  from './imagegalleryitem.module.css';
 import PropTypes from 'prop-types';
+import styles  from './imagegalleryitem.module.css';
 
 
 const ImageGalleryItem = ({items , onClick}) => {

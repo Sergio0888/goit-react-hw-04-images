@@ -1,39 +1,21 @@
 import { Component } from "react";
-import Button from "shared/Button/Button";
-import { getImages } from '../shared/images';
+import Button from "shared/components/Button/Button";
+import { getImages } from '../shared/api/images';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
-import Loader from '../shared/Loader/Loader';
-import Modal from '../shared/Modal/Modal'
+import Loader from '../shared/components/Loader/Loader';
+import Modal from '../shared/components/Modal/Modal';
+import initialState from "./initialState";
 
 
 class App extends Component {
 
-    state = {
-        items: [],
-        loading: false,
-        q: '',
-        totalHits: 0,
-        page: 1,
-        error: null,
-        vissibleModal: false,
-        modal: []
-    }
+    state = {...initialState}
 
-    componentDidMount() {
-        this.fetchImages();
-    }
-
-    componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(_, prevState) {
         const { page, q} = this.state;
-        if (q !== prevState.q) {
-          this.fetchImages();
-          this.setState({
-            page: 1,
-          });
-        }
-        if (page > prevState.page) {
-          this.fetchImages();
+        if (q !== prevState.q || page > prevState.page) {
+          this.fetchImages()
         }
       }
 
@@ -45,11 +27,12 @@ class App extends Component {
         try {
             const { data } = await getImages(q,page);
             const { hits,totalHits } = data;
-            this.setState({
+            this.setState(({items}) => ({
                 items: [...items, ...hits],
                 totalHits: totalHits
-            })
-        } catch (error) {
+            }))
+        } 
+        catch (error) {
             this.setState({
                 error: error.message
             })
@@ -60,9 +43,7 @@ class App extends Component {
     }
 
 
-    handleSubmit = (e) => {
-        e.preventDefault()
-        const { value } = e.target[1];
+    onSubmit = (value) => {
         this.setState(prevState => {
             if (prevState.q !== value) {
               return {
@@ -73,8 +54,8 @@ class App extends Component {
             }
           });
     }
+
     fetchId = (id) => {
-        console.log('fetchID');
         const { items } = this.state;
         this.setState({
             vissibleModal: true,
@@ -100,7 +81,7 @@ class App extends Component {
     render() {
 
         const { items, page, totalHits, loading, modal, vissibleModal } = this.state;
-        const { handleSubmit, loadMore, closeModal, fetchId } = this;
+        const { onSubmit, loadMore, closeModal, fetchId } = this;
 
        return (
         <>
@@ -109,11 +90,11 @@ class App extends Component {
             <img src={modal.largeImageURL} alt={modal.tags} width="900"/>
           </Modal>
         }
-        <Searchbar onSubmit={handleSubmit}/>
+        <Searchbar onSubmit={onSubmit}/>
         <ImageGallery items={items} onClick={fetchId}/>
         {loading && <Loader />}
         {!loading && items.length >= 12 && page * 12 <= totalHits && (
-          <Button load={loadMore} />
+          <Button text="Load more" loadMore={loadMore} />
         )}
        </>
        )
