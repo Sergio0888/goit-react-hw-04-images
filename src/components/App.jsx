@@ -23,7 +23,7 @@ class App extends Component {
         this.setState({
             loading: true
         })
-        const { q, page, items } = this.state;
+        const { q, page } = this.state;
         try {
             const { data } = await getImages(q,page);
             const { hits,totalHits } = data;
