@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { getImages } from '../api/images';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
@@ -8,80 +8,80 @@ import Modal from './Modal/Modal';
 import initialState from "./initialState";
 
 
-class App extends Component {
+const App = () => {
 
-    state = {...initialState}
+  const [state, setState] = useState({...initialState});
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState('');
 
-    componentDidUpdate(_, prevState) {
-        const { page, q} = this.state;
-        if (q !== prevState.q || page > prevState.page) {
-          this.fetchImages()
-        }
-      }
+  useEffect(() => {
+    if (query === '') {
+        return
+    }
+    const fetchImages = async() => {
 
-    async fetchImages() {
-        this.setState({
-            loading: true
-        })
-        const { q, page } = this.state;
-        try {
-            const { data } = await getImages(q,page);
+          try {
+            setState(prevState => ({
+              ...prevState,
+                loading: true
+            }))
+
+            const { data } = await getImages(query,page);
             const { hits,totalHits } = data;
-            this.setState(({items}) => ({
-                items: [...items, ...hits],
+            setState(prevState => ({
+                ...prevState,
+                items: [...prevState.items, ...hits],
                 totalHits: totalHits
             }))
-        } 
-        catch (error) {
-            this.setState({
-                error: error.message
-            })
-        }
-        finally {
-            this.setState({ loading: false })
-        }
-    }
-
-
-    onSubmit = (value) => {
-        this.setState(prevState => {
-            if (prevState.q !== value) {
-              return {
-                q: value,
-                page: 1,
-                items: [],
-              };
-            }
-          });
-    }
-
-    fetchId = (id) => {
-        const { items } = this.state;
-        this.setState({
-            vissibleModal: true,
-            modal: items.filter(el => el.id === id)[0]
-        })
+          } 
+          catch (error) {
+              setState(prevState => ({
+                ...prevState,
+                  error: error.message
+              }))
+          }
+          finally {
+            setState(prevState => ({
+              ...prevState,
+              loading: false 
+            }))
+          }
       }
+      fetchImages()
+  }, [setState, page, query])
 
-    closeModal = () => {
-        this.setState({
-            vissibleModal: false,
-        })
-      }
-
-    loadMore = () => {
-        this.setState(({ page }) => {
-            return {
-                page: page + 1
-            }
-        })
+  const onSubmit = (value) => {
+    if (query !== value) {
+      setState(prevState => ({
+        ...prevState,
+        items: []
+      }));
     }
-    
+    setQuery(value)
+    setPage(1);
+  };
 
-    render() {
+  const fetchId = (id) => {
+    const { items } = state;
+    setState(prevState => ({
+      ...prevState,
+      vissibleModal: true,
+      modal: items.filter(el => el.id === id)[0]
+    }));
+  };
 
-        const { items, page, totalHits, loading, modal, vissibleModal } = this.state;
-        const { onSubmit, loadMore, closeModal, fetchId } = this;
+  const closeModal = () => {
+    setState(prevState => ({
+      ...prevState,
+      vissibleModal: false,
+    }));
+  };
+
+  const loadMore = () => {
+    setPage(prevPage  => prevPage + 1)
+  };
+
+  const { items, totalHits, loading, modal, vissibleModal } = state;
 
        return (
         <>
@@ -98,9 +98,6 @@ class App extends Component {
         )}
        </>
        )
-    }
-
 }
-
 
 export default App;
